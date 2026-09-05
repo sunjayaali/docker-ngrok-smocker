@@ -1,0 +1,16 @@
+services:
+  smocker:
+    image: ghcr.io/smocker-dev/smocker:latest
+    ports:
+      - "${SMOCKER_HTTP_PORT}:${SMOCKER_HTTP_PORT}"
+      - "${SMOCKER_UI_PORT}:${SMOCKER_UI_PORT}"
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command: http smocker:${SMOCKER_HTTP_PORT} --url ${NGROK_URL}
+    ports:
+      - 4040:4040
+    depends_on:
+      - smocker
